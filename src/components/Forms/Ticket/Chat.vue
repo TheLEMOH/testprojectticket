@@ -112,7 +112,7 @@ const SendMessage = async () => {
 
   if (res.ok) {
     messages.value = await Get(`/messages/${props.ticketId}`);
-    emit("refresh");
+    if (type != "answer") emit("refresh");
   }
 };
 </script>

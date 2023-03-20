@@ -1,7 +1,6 @@
 <template>
   <Table :url="props.url" :global="global" :redirect="{ create: 'statusCreate', filter: 'statusFilter' }" :paginator="true">
     <template #columns>
-      <Column field="id" header="Идентификатор"></Column>
       <Column field="name" header="Наименование"></Column>
       <Column field="nameForInternalUsers" header="Внутреннее наименование"></Column>
       <Column field="nameForExternalUsers" header="Внешнее наименование"></Column>

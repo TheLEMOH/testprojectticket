@@ -7,7 +7,7 @@
 
     <div class="info-field">
       <span>Организация</span>
-      {{ props.creator.organization.name }}
+      {{ props.creator.organization.shortName }}
     </div>
 
     <div class="info-field">
@@ -26,7 +26,7 @@
     </div>
 
     <div class="info-field">
-      <span>Адресс </span>
+      <span>Адрес </span>
       {{ props.creator.address }}
     </div>
 

@@ -10,7 +10,7 @@
           <Transition name="fade" mode="out-in">
             <Suspense>
               <template #default>
-                <component :is="Component" />
+                <component :is="Component" :key="fullPath" />
               </template>
               <template #fallback>
                 <ProgressBar mode="indeterminate" style="height: 1rem; width: 100%" />
@@ -26,32 +26,32 @@
 <script setup>
 import Sidebar from "../components/Sidebar/Sidebar.vue";
 import Header from "../components/Header/Header.vue";
-
+import { useRoute } from "vue-router";
 import { computed } from "vue";
-
 import { useStore } from "vuex";
 
 const store = useStore();
+const route = useRoute();
 
-const role = computed(() => store.getters.clientRole);
+const fullPath = computed(() => route.fullPath);
 </script>
 
 <style>
 .standard {
   display: grid;
   height: 100vh;
-  grid-template-columns: 12.5rem auto;
+  width: 100vw;
+  grid-template-columns: 13rem auto;
 }
 
 .page {
   overflow-x: auto;
-  z-index: 1;
+  z-index: 0;
 }
 
 .content {
   display: flex;
   justify-content: center;
-  z-index: 1;
 }
 
 .fade-enter-active,
@@ -69,5 +69,12 @@ const role = computed(() => store.getters.clientRole);
   margin: 1rem;
   border-radius: 10px;
   background: #fff;
+}
+
+@media (max-width: 960px) {
+  .standard {
+    grid-template-columns: auto;
+    grid-template-rows: 45px auto;
+  }
 }
 </style>

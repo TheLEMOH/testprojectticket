@@ -1,7 +1,6 @@
 <template>
   <Table :url="props.url" :global="global" :redirect="{ create: 'organizationCreate', filter: 'organizationFilter' }" :paginator="true">
     <template #columns>
-      <Column field="id" header="Уникальный ID"></Column>
       <Column field="shortName" header="Сокращение"></Column>
       <Column field="name" header="Наименование организации"></Column>
       <Column field="address" header="Адрес"></Column>

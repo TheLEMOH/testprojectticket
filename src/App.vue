@@ -134,9 +134,24 @@ h5 {
   font-size: 1.25rem;
 }
 
-
 /* .p-button.p-button-sm {
     font-size: 0.5rem;
     padding: 0.65625rem 1.09375rem;
 } */
+
+td {
+  white-space: normal !important;
+}
+
+.p-dialog-mask {
+  z-index: 1000;
+}
+
+
+@media (max-width: 960px) {
+  html {
+  font-size: 12px;
+}
+
+}
 </style>

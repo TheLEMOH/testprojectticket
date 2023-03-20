@@ -8,6 +8,6 @@ import Form from "../../components/Forms/Ticket.vue"
 import { Get } from "../../scripts/fetch"
 
 
-const areas = await Get('/areaswithnodes')
+const areas = await Get('/areasbyuser')
 
 </script>

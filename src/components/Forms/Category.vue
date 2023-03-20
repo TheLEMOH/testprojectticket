@@ -36,8 +36,8 @@
           <Column field="type" header="Тип"></Column>
           <Column header=" ">
             <template #body="{ data, index }">
-              <Button class="p-button-sm" icon="pi pi-pencil" @click="[SelectField(data), OpenEdit()]" />
-              <Button class="p-button-sm p-button-danger" icon="pi pi-times" @click="[DeleteField(index)]" />
+              <Button class="p-button-sm p-button-raised" icon="pi pi-pencil" @click="[SelectField(data), OpenEdit()]" />
+              <Button class="p-button-sm p-button-danger p-button-raised" icon="pi pi-times" @click="[DeleteField(index)]" />
             </template>
           </Column>
         </template>
@@ -55,6 +55,7 @@
           <Checkbox v-model="selectedField.required" inputId="required" name="required" binary />
           <label for="required">Обязательное поле</label>
         </div>
+
         <p>Заполните таблицу для поля типа "Выбор"</p>
         <div class="flex-form-between">
           <h5>Список</h5>
@@ -83,7 +84,7 @@
 
         <template #footer>
           <Button label="Добавить" class="p-button-raised" @click="[AddField(), Close()]" :disabled="DisableAddButton()" v-if="typeModal == 'create'" />
-          <Button label="Закрыть" @click="[Close()]" :disabled="DisableAddButton()" v-if="typeModal == 'edit'" />
+          <Button label="Закрыть" class="p-button-raised" @click="[Close()]" :disabled="DisableAddButton()" v-if="typeModal == 'edit'" />
         </template>
       </Dialog>
     </template>
@@ -185,7 +186,7 @@ const AddValue = () => {
   });
 };
 
-const DeleteValue = (data, index) => {
+const DeleteValue = (index) => {
   selectedField.value.list.splice(index, 1);
 };
 

@@ -18,7 +18,6 @@
         <template #columns>
           <Column :rowReorder="true" headerStyle="width: 3rem" :reorderableColumn="false" />
           <Column field="shortName" header="Сокращение"></Column>
-          <Column field="name" header="Наименование"></Column>
           <Column field="isHead" header="Головная организация">
             <template #body="{ data }">
               <Checkbox v-model="data.isHead" disabled binary />
@@ -134,7 +133,6 @@ const redirect = { name: "wayAll" };
 
 const rules = {
   name: { required },
-  organizations: { required },
 };
 
 let state = reactive({

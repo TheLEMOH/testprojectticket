@@ -1,7 +1,6 @@
 <template>
   <Table :url="props.url" :global="global" :redirect="{ create: 'folderCreate', filter: 'folderFilter' }" :paginator="true">
     <template #columns>
-      <Column field="id" header="Идентификатор"></Column>
       <Column field="name" header="Наименование"></Column>
       <Column field="description" header="Описание"></Column>
       <Column header="Управление">

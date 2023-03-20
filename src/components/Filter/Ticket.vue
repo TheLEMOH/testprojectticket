@@ -2,7 +2,6 @@
   <Filter :search="state" redirect="ticketTableFilter">
     <template #title>Фильтр заявок</template>
     <template #content>
-      <InputText v-model="state.id" placeholder="Идентификатор заявки"></InputText>
       <Calendar inputId="range" v-model="state.date" selectionMode="range" :manualInput="false" placeholder="Дата создания" />
       <Dropdown v-model="state.creatorId" :options="users" optionLabel="name" optionValue="id" filter placeholder="Создатель "></Dropdown>
       <Dropdown v-model="state.executorId" :options="employees" optionLabel="name" optionValue="id" filter placeholder="Исполнитель "> </Dropdown>

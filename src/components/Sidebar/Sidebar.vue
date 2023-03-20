@@ -1,22 +1,44 @@
 <template>
   <div class="sidebar">
-    <h3>Меню</h3>
-    <TieredMenu class="sidebar-menu" :model="items" orientation="vertical"> </TieredMenu>
-    <h3>Папки</h3>
-    <TieredMenu class="sidebar-menu" :model="folders" orientation="vertical" v-if="clientRole > 1"> </TieredMenu>
+    <template v-if="widthWindow > 960">
+      <h3>Меню</h3>
+      <TieredMenu class="sidebar-menu" :model="items" orientation="vertical"> </TieredMenu>
+      <h3>Папки</h3>
+      <TieredMenu class="sidebar-menu" :model="folders" orientation="vertical"> </TieredMenu>
+      <template v-if="userFolders.length == 0">У Вас нет папок</template>
+    </template>
+
+    <template v-else>
+      <Button class="p-button-text" type="button" label="Меню" @click="displayMenu = true" />
+      <Dialog v-model:visible="displayMenu" modal style="width: 85%" fullscreen>
+        <PanelMenu :model="items" popup />
+      </Dialog>
+    </template>
   </div>
 </template>
 
 <script setup>
 import { useStore } from "vuex";
-import { computed } from "vue";
+import { useRouter } from "vue-router";
+import { computed, ref, onMounted, onUnmounted } from "vue";
+import PanelMenu from "primevue/panelmenu";
 
 const store = useStore();
+const router = useRouter();
+const menu = ref();
+const displayMenu = ref(false);
 const clientRole = computed(() => store.getters.clientRole);
+const widthWindow = ref(window.innerWidth);
 const userFolders = computed(() => {
   const uf = store.getters.folders;
   const nf = uf.map((f) => {
-    return { label: f.name, to: { name: "ticketTableFilter", query: f.filter } };
+    return {
+      label: f.name,
+      command: () => {
+        console.log(f.filter);
+        router.push({ name: "ticketTableFilter", query: f.filter });
+      },
+    };
   });
   return nf;
 });
@@ -190,17 +212,28 @@ const items = [
   { separator: true },
 ];
 
-const folders = [
+const folders = computed(() => [
   {
     label: "Управление папками",
     items: [
       { label: "Создать папку", to: { name: "folderCreate" } },
       { label: "Все папки", to: { name: "folderAll" } },
     ],
+    visible: () => clientRole.value > 1,
   },
-  { separator: true },
+  { separator: true, visible: () => clientRole.value > 1 },
   ...userFolders.value,
-];
+]);
+
+const toggle = (event) => {
+  menu.value.toggle(event);
+};
+
+const onWidthChange = () => (widthWindow.value = window.innerWidth);
+
+onMounted(() => window.addEventListener("resize", onWidthChange));
+
+onUnmounted(() => window.removeEventListener("resize", onWidthChange));
 </script>
 
 <style>
@@ -210,7 +243,8 @@ const folders = [
   flex-direction: column;
   align-items: center;
   box-shadow: 4px 4px 8px 0px rgba(34, 60, 80, 0.2);
-  z-index: 2;
+  z-index: 1;
+  border-right: 1px solid #ccc;
 }
 
 .p-tieredmenu {

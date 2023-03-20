@@ -1,9 +1,9 @@
 <template>
   <Table :url="props.url" :global="global" :redirect="{ create: 'userCreate', filter: 'userFilter' }" :paginator="true">
     <template #columns>
-      <Column field="surname" header="Фамилия"></Column>
-      <Column field="name" header="Имя"></Column>
-      <Column field="patronymic" header="Отчество"></Column>
+      <Column field="surname" header="ФИО">
+        <template #body="{ data }"> {{ data.surname }} {{ data.name }} {{ data.patronymic }} </template>
+      </Column>
       <Column field="role.name" header="Роль"></Column>
       <Column field="organization.name" header="Организация" />
       <Column field="subdivision" header="Подразделение"></Column>

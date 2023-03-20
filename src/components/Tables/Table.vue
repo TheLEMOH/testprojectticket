@@ -4,11 +4,13 @@
     :lazy="true"
     v-model:filters="filters"
     :resizableColumns="true"
+    columnResizeMode="fit"
     stripedRows
     :rows="25"
     :totalRecords="items.count"
     :rowsPerPageOptions="[25, 50, 100]"
     class="p-datatable-sm"
+    styleClass="fixed-size"
     :reorderableColumns="false"
     :globalFilterFields="global"
     responsiveLayout="stack"
@@ -23,12 +25,14 @@
         </div>
         <div>
           <Button icon="pi pi-plus" class="p-button-sm p-button-raised p-button-success" @click="RedirectCreate" v-if="props.redirect.create"></Button>
-          <Button icon="pi pi-filter" class="p-button-sm p-button-raised" style="margin-right: 1rem !important" @click="RedirectFilter" v-if="props.redirect.filter"></Button>
-
-          <span class="p-input-icon-left">
-            <i class="pi pi-search" />
-            <InputText placeholder="Поиск" v-model="filters['global'].value" />
-          </span>
+          <Button icon="pi pi-filter" class="p-button-sm p-button-raised" @click="RedirectFilter" v-if="props.redirect.filter"></Button>
+          <Button
+            icon="pi pi-filter-slash"
+            class="p-button-sm p-button-raised"
+            @click="ClearFilter"
+            style="margin-right: 1rem !important"
+            :disabled="!Object.keys(query).length"
+          ></Button>
         </div>
       </div>
     </template>
@@ -40,14 +44,16 @@
 </template>
 
 <script setup>
-import { ref, reactive } from "vue";
+import { ref, watch, computed } from "vue";
 import { FilterMatchMode } from "primevue/api";
 import { Get } from "../../scripts/fetch";
 
 import { useRoute, useRouter } from "vue-router";
 const route = useRoute();
 const router = useRouter();
-const query = route.query;
+const query = computed(() => {
+  return route.query;
+});
 
 const filters = ref({
   global: { value: null, matchMode: FilterMatchMode.CONTAINS },
@@ -87,7 +93,7 @@ const props = defineProps({
 let items = ref({});
 
 const GetItems = async (event = { page: 0, rows: 25 }) => {
-  const filter = Object.fromEntries(Object.entries(query).filter(([_, v]) => v != null));
+  const filter = Object.fromEntries(Object.entries(query.value).filter(([_, v]) => v != null));
   const searchParams = { page: event.page, limit: event.rows, ...filter };
   items.value = await Get(`${props.url}`, { searchParams });
 };
@@ -106,6 +112,10 @@ const RedirectCreate = () => {
 
 const RedirectFilter = () => {
   router.push({ name: props.redirect.filter });
+};
+
+const ClearFilter = () => {
+  router.replace({ query: null });
 };
 </script>
 

@@ -2,12 +2,12 @@
   <Form :url="url" :object="state" :redirect="{ name: 'system' }">
     <template #main>
       <div class="flex-form-column">
-        <h5>Статус при создании заяки</h5>
-        <Dropdown placeholder="Выберите статус" v-model="state.openId" :options="statuses" optionLabel="name" optionValue="id"> </Dropdown>
-        <h5>Статус при закрытии заяки</h5>
-        <Dropdown placeholder="Выберите статус" v-model="state.closeId" :options="statuses" optionLabel="name" optionValue="id"> </Dropdown>
-        <h5>Статус при отклонении заяки</h5>
-        <Dropdown placeholder="Выберите статус" v-model="state.rejectId" :options="statuses" optionLabel="name" optionValue="id"> </Dropdown>
+        <h5>Статус при создании заявки</h5>
+        <Dropdown placeholder="Выберите статус" v-model="state.openId" :options="statuses" optionLabel="name" optionValue="id" filter> </Dropdown>
+        <h5>Статус при закрытии заявки</h5>
+        <Dropdown placeholder="Выберите статус" v-model="state.closeId" :options="statuses" optionLabel="name" optionValue="id" filter> </Dropdown>
+        <h5>Статус при отклонении заявки</h5>
+        <Dropdown placeholder="Выберите статус" v-model="state.rejectId" :options="statuses" optionLabel="name" optionValue="id" filter> </Dropdown>
       </div>
       <h5>Разрешенные почтовые сервисы</h5>
       <div class="flex-form">

@@ -12,7 +12,16 @@
 
       <h5>Дополнительные данные</h5>
       <div class="flex-form-column">
-        <Dropdown v-model="state.organizationId" :options="props.organizations" optionLabel="name" optionValue="id" :filter="true" placeholder="Организация *" @change="SetAddress"> </Dropdown>
+        <Dropdown
+          v-model="state.organizationId"
+          :options="props.organizations"
+          optionLabel="shortName"
+          optionValue="id"
+          :filter="true"
+          placeholder="Организация *"
+          @change="SetAddress"
+        >
+        </Dropdown>
         <InputText v-model="state.subdivision" placeholder="Подразделение *"></InputText>
         <InputText v-model="state.position" placeholder="Должность *"></InputText>
         <InputText v-model="state.address" placeholder="Адрес *"></InputText>
@@ -35,26 +44,28 @@
 
       <Divider></Divider>
 
-      <h5>Система</h5>
-      <div class="flex-form-column">
-        <Dropdown placeholder="Область работ"></Dropdown>
-        <Dropdown placeholder="Роль" v-model="state.roleId" :options="props.roles" optionLabel="name" optionValue="id" :filter="true"></Dropdown>
-      </div>
-
-      <div class="flex-form">
-        <div class="field-checkbox">
-          <Checkbox v-model="state.isEmployee" inputId="emp1" name="emp" :binary="true" />
-          <label for="emp1">Является исполнителем</label>
+      <template v-if="role > 1">
+        <h5>Система</h5>
+        <div class="flex-form-column">
+          <MultiSelect placeholder="Область работ" v-model="state.areasId" :options="props.areas" optionLabel="name" optionValue="id" :filter="true"></MultiSelect>
+          <Dropdown placeholder="Роль" v-model="state.roleId" :options="props.roles" optionLabel="name" optionValue="id" :filter="true"></Dropdown>
         </div>
-      </div>
 
-      <Divider></Divider>
+        <div class="flex-form">
+          <div class="field-checkbox">
+            <Checkbox v-model="state.isEmployee" inputId="emp1" name="emp" :binary="true" />
+            <label for="emp1">Является исполнителем</label>
+          </div>
+        </div>
 
-      <h5>Папки</h5>
+        <Divider></Divider>
 
-      <MultiSelect v-model="state.foldersId" :options="folders" optionLabel="name" optionValue="id" placeholder="Выберите папки" filter></MultiSelect>
+        <h5>Папки</h5>
 
-      <Divider></Divider>
+        <MultiSelect v-model="state.foldersId" :options="folders" optionLabel="name" optionValue="id" placeholder="Выберите папки" filter></MultiSelect>
+
+        <Divider></Divider>
+      </template>
 
       <Dialog header="Смена пароля" v-model:visible="display" :maximizable="true" :modal="true">
         <PasswordComponent @change="InputPass"></PasswordComponent>
@@ -68,14 +79,20 @@
 </template>
 
 <script setup>
-import { ref, reactive } from "vue";
+import { ref, reactive, computed } from "vue";
 import { required, minLength, helpers } from "@vuelidate/validators";
 import { useVuelidate } from "@vuelidate/core";
+import { useStore } from "vuex";
 import Form from "./Form.vue";
 import PasswordComponent from "./Password/PasswordComponent.vue";
 import { Put } from "../../scripts/fetch";
+
 const url = "/users";
-const redirect = { name: "userAll" };
+
+const store = useStore();
+const role = computed(() => store.getters.clientRole);
+
+const redirect = computed(() => (role.value > 1 ? { name: "userAll" } : { name: "home" }));
 
 const rules = {
   surname: { required },
@@ -101,6 +118,7 @@ const props = defineProps({
   organizations: Array,
   folders: Array,
   roles: Array,
+  areas: Array,
   typePage: {
     type: String,
     default: "create",
@@ -120,6 +138,7 @@ let state = reactive({
   patronymic: null,
   organizationId: null,
   roleId: null,
+  wayId: null,
   subdivision: null,
   position: null,
   address: null,
@@ -127,6 +146,7 @@ let state = reactive({
   phone: null,
   phoneWork: null,
   email: null,
+  areasId: null,
   isEmployee: false,
   foldersId: null,
 });
@@ -149,7 +169,8 @@ const InputPass = (event) => {
 };
 
 const ChangePass = async () => {
-  await Put(url, { id: state.id, password: password.value });
+  await Put(url, { ...state, password: password.value });
+  display.value = false;
 };
 </script>
 

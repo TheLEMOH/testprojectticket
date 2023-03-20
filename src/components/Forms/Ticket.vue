@@ -9,7 +9,7 @@
           </div>
           <div class="ticket-column">
             <h5>Заявка</h5>
-            <TickeyFields :state="state"></TickeyFields>
+            <TickeyFields :state="state" @open-way="displayWay = true"></TickeyFields>
           </div>
         </div>
         <Divider></Divider>
@@ -19,13 +19,13 @@
         <h5>Выбрать категорию</h5>
 
         <CascadeSelect
-          v-model="state.categoryId"
+          v-model="selectedCategory"
           :options="tree"
-          :optionGroupChildren="['children', 'children', 'children']"
+          :optionGroupChildren="['children', 'children', 'children', 'children', 'children']"
           optionLabel="data.name"
           optionGroupLabel="data.name"
           :showClear="true"
-          optionValue="data.category"
+          optionValue="data"
           @change="GetCategory($event)"
           :loading="loading"
         >
@@ -55,24 +55,25 @@
       <template v-if="creator">
         <Chat :display="displayChat" :creatorId="`${creator.id}`" :ticketId="state.id" @close="CloseChat" @refresh="RefreshTicket()" v-if="typePage == 'display'"></Chat>
       </template>
-
-      <WayInfo :wayId="state.wayId"></WayInfo>
+      <template v-if="state.wayId">
+        <WayInfo :ticket="state" :display="displayWay" @close="CloseWay"></WayInfo>
+      </template>
     </template>
 
     <template #footer>
       <div class="ticket-control" v-if="typePage == 'display'">
         <div class="ticket-control-buttons">
-          <Button class="p-button-raised" icon="pi pi-comments" @click="displayChat = true"></Button>
+          <Button class="p-button-raised" v-tooltip.top="'Открыть сообщения'" icon="pi pi-comments" @click="displayChat = true"></Button>
         </div>
         <template v-if="role > 1">
           <div class="ticket-control-buttons">
-            <Button class="p-button-raised" icon="pi pi-angle-left" @click="PreviousStep"> </Button>
-            <Button class="p-button-raised" icon="pi pi-angle-right" @click="NextStep"></Button>
+            <Button class="p-button-raised" v-tooltip.top="'Передать заявку назад'" icon="pi pi-angle-left" @click="PreviousStep"> </Button>
+            <Button class="p-button-raised" v-tooltip.top="'Передать заявку вперед'" icon="pi pi-angle-right" @click="NextStep"></Button>
           </div>
 
           <div class="ticket-control-buttons">
-            <Button class="p-button-danger p-button-raised" icon="pi pi-times" @click="RejectTicket"> </Button>
-            <Button class="p-button-success p-button-raised" @click="CloseTicket" icon="pi pi-check"></Button>
+            <Button class="p-button-danger p-button-raised" v-tooltip.top="'Отклонить заявку'" icon="pi pi-times" @click="RejectTicket"> </Button>
+            <Button class="p-button-success p-button-raised" v-tooltip.top="'Закрыть заявку'" @click="CloseTicket" icon="pi pi-check"></Button>
           </div>
         </template>
       </div>
@@ -148,8 +149,11 @@ let state = reactive({
   creatorId: creator.value.id,
 });
 
+const selectedCategory = ref(null);
+
 const message = ref(null);
 const displayChat = ref(false);
+const displayWay = ref(false);
 
 if (Object.keys(props.state).length != 0) {
   state = reactive(props.state);
@@ -159,10 +163,26 @@ const ChangeAdditionalFields = (event) => {
   state.fields = event;
 };
 
+const NextNode = (node, index) => {
+  return null;
+};
+
+const CreateWay = () => {};
+
 const GetCategory = async (event) => {
+  const road = event.value.key.split("-");
+
+  /*   let node = tree;
+  road.forEach((r) => {
+    node = NextNode(node, r);
+  }); */
+
+  console.log(event.value);
+
   loading.value = true;
-  const categoryId = event.value;
+  const categoryId = event.value.category;
   state.category = await Get(`/categories/${categoryId}`);
+  state.categoryId = categoryId;
   loading.value = false;
 };
 
@@ -258,9 +278,12 @@ const CloseChat = () => {
   displayChat.value = false;
 };
 
+const CloseWay = () => {
+  displayWay.value = false;
+};
+
 const RefreshTicket = async () => {
-  const id = route.params.id;
-  state = reactive(await Get(`/tickets/${id}`));
+  router.go();
 };
 
 const v = useVuelidate(rules, state);
@@ -274,6 +297,8 @@ const v = useVuelidate(rules, state);
 .info-field {
   display: flex;
   margin: 0.3rem;
+
+  white-space: normal !important;
 }
 
 .info-field span {
@@ -289,11 +314,23 @@ const v = useVuelidate(rules, state);
   gap: 2rem;
 }
 
+.user-column {
+  width: 30rem;
+}
+
+.ticket-column {
+  width: 30rem;
+}
+
 .ticket-control {
   display: flex;
 }
 
 .ticket-control-buttons {
   margin-left: 1rem;
+}
+
+.p-cascadeselect-label {
+  width: 150px;
 }
 </style>

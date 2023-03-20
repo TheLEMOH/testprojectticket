@@ -42,7 +42,7 @@ const routes = [
     },
   },
 
-  /* { path: "/:pathMatch(.*)*", component: () => import("../views/Page404.vue"), meta: { layout: "Standart", name: "404" } }, */
+  { path: "/:pathMatch(.*)*", name: "404", component: () => import("../views/Page404.vue"), meta: { layout: "Center" } },
 
   ...area,
   ...category,
@@ -64,6 +64,7 @@ const router = createRouter({
 
 router.beforeEach((to, from, next) => {
   const localToken = localStorage.getItem("TOKEN_TICKET_SYSTEM");
+
   if (to.name == "registration" || to.name.includes("init")) {
     next();
   } else if (to.name != "login" && !localToken) {

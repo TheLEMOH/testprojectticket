@@ -16,7 +16,16 @@
 
       <h5>Дополнительные данные</h5>
       <div class="flex-form-column">
-        <Dropdown v-model="state.organizationId" :options="props.organizations" optionLabel="name" optionValue="id" :filter="true" placeholder="Организация *" @change="SetAddress"> </Dropdown>
+        <Dropdown
+          v-model="state.organizationId"
+          :options="props.organizations"
+          optionLabel="shortName"
+          optionValue="id"
+          :filter="true"
+          placeholder="Организация *"
+          @change="SetAddress"
+        >
+        </Dropdown>
         <InputText v-model="state.subdivision" placeholder="Подразделение *"></InputText>
         <InputText v-model="state.position" placeholder="Должность *"></InputText>
         <InputText v-model="state.address" placeholder="Адрес *"></InputText>
@@ -38,19 +47,6 @@
       <PasswordComponent @change="InputPass"></PasswordComponent>
 
       <Divider></Divider>
-
-      <h5>Система</h5>
-      <div class="flex-form-column">
-        <Dropdown placeholder="Область работ"></Dropdown>
-        <Dropdown placeholder="Роль" v-model="state.roleId" :options="props.roles" optionLabel="name" optionValue="id" :filter="true"></Dropdown>
-      </div>
-
-      <div class="flex-form">
-        <div class="field-checkbox">
-          <Checkbox v-model="state.isEmployee" inputId="emp1" name="emp" :binary="true" />
-          <label for="emp1">Является исполнителем</label>
-        </div>
-      </div>
     </template>
   </Form>
 </template>
@@ -85,6 +81,7 @@ const rules = {
 const props = defineProps({
   organizations: Array,
   roles: Array,
+  areas: Array,
   typePage: {
     type: String,
     default: "create",

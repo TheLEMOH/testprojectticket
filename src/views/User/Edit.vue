@@ -1,5 +1,5 @@
 <template>
-  <Form :organizations="orgs" :roles="roles" :state="user" :folders="folders" :typePage="'edit'"></Form>
+  <Form :organizations="orgs" :state="user" :roles="roles" :areas="areas" :folders="folders" :typePage="'edit'"></Form>
 </template>
 
 <script setup>
@@ -17,4 +17,5 @@ const user = await Get(`/users/${id}`);
 const orgs = await Get("/organizations");
 const roles = await Get("/roles");
 const folders = await Get("/folders");
+const areas = await Get("/areas");
 </script>

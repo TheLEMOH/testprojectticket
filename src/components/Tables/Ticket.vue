@@ -10,13 +10,16 @@
         <template #body="{ data }"> {{ data.creator.surname }} {{ data.creator.name }} {{ data.creator.patronymic }} </template>
       </Column>
       <Column field="executor" header="Исполнитель">
-        <template #body="{ data }"> {{ data.executor.surname }} {{ data.executor.name }} {{ data.executor.patronymic }} </template>
+        <template #body="{ data }">
+          <template v-if="data.executor"> {{ data.executor.surname }} {{ data.executor.name }} {{ data.executor.patronymic }} </template>
+          <template v-else><b>Исполнитель не назначен</b></template>
+        </template>
       </Column>
       <Column field="category.name" header="Категория"></Column>
       <Column header="Путь">
         <template #body="{ data }"> {{ data.way.name }} ({{ data.stepNumber }}) </template>
       </Column>
-      <Column field="status.name" header="Статус"></Column>
+      <Column field="status.name" header="Статус"> </Column>
       <Column header="Приоритет">
         <template #body="{ data }">
           <Badge :value="data.priority.name" :severity="data.priority.type"></Badge>
@@ -32,12 +35,13 @@
 </template>
 
 <script setup>
-import { ref } from "vue";
-import { useRouter } from "vue-router";
+import { ref, computed } from "vue";
+import { useRouter, useRoute } from "vue-router";
 
 import Table from "./Table.vue";
 
 const router = useRouter();
+const route = useRoute();
 
 const global = ["category.name"];
 
@@ -50,4 +54,15 @@ const Open = (id) => {
 };
 </script>
 
-<style></style>
+<style>
+.custom-badge {
+  border-radius: 2px;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.3px;
+  padding: 0.25em 0.5rem;
+  text-transform: uppercase;
+  color: #fff;
+  border-radius: 6px;
+}
+</style>

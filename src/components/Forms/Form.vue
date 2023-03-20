@@ -14,7 +14,7 @@
           <Button label="Создать" class="p-button-raised" @click="Post(props.url, props.object, props.redirect)" :disabled="props.invalid"></Button>
         </template>
 
-        <template v-if="typePage == 'edit' && clientRole > 2">
+        <template v-if="typePage == 'edit' && clientRole > 0">
           <Button label="Удалить" class="p-button-raised p-button-danger" @click="DeleteObject"></Button>
           <Button label="Сохранить" class="p-button-raised" @click="Put(props.url, props.object, props.redirect)" :disabled="props.invalid"></Button>
         </template>
@@ -67,12 +67,11 @@ const DeleteObject = () => {
   margin-top: 1rem;
   border-radius: 10px;
   width: 1000px;
+  flex-shrink: 1;
   background: #fff;
 }
 
 .form .p-button {
   margin-left: 1rem;
 }
-
-
 </style>

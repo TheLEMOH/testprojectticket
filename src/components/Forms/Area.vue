@@ -25,7 +25,7 @@
             </div>
           </div>
         </template>
-        <Column field="key" header="Уровень" :expander="true"> </Column>
+        <Column field="key" header="Уровень" :expander="true" style="min-width: 15rem"> </Column>
         <Column field="name" header="Наименование"> </Column>
         <Column field="type" header="Тип"></Column>
         <Column field="category" header="Категория">
@@ -33,7 +33,7 @@
             <Dropdown v-model="node.data.category" :options="props.categories" optionLabel="name" optionValue="id" disabled v-if="node.data.category" />
           </template>
         </Column>
-        <Column header="Управление">
+        <Column header="Управление" style="min-width: 15rem">
           <template #body="{ node, column }">
             <Button class="p-button-raised p-button-sm" icon="pi pi-pencil" @click="[SelectNode(node), (displayNode = true)]" />
             <Button class="p-button-raised p-button-sm" icon="pi pi-plus" @click="AddNode(node)" :disabled="DisableAddButton(node)" />
@@ -45,7 +45,16 @@
       <Dialog header="Настройка узла" v-model:visible="displayNode" :modal="true" :maximizable="true" style="width: 300px">
         <div class="flex-form-column">
           <InputText v-model="selectedNode.data.name" placeholder="Наименования узла" />
-          <Dropdown v-model="selectedNode.data.category" :options="props.categories" optionLabel="name" :showClear="true" optionValue="id" :filter="true" placeholder="Категория" @change="SetName($event)" />
+          <Dropdown
+            v-model="selectedNode.data.category"
+            :options="props.categories"
+            optionLabel="name"
+            :showClear="true"
+            optionValue="id"
+            :filter="true"
+            placeholder="Категория"
+            @change="SetName($event)"
+          />
         </div>
         <template #footer>
           <Button label="Закрыть" class="p-button-raised" icon="pi pi-times" @click="displayNode = false" />
@@ -56,7 +65,7 @@
 </template>
 
 <script setup>
-import { ref, reactive } from "vue";
+import { ref, reactive, computed } from "vue";
 import { required } from "@vuelidate/validators";
 import { useVuelidate } from "@vuelidate/core";
 import Form from "./Form.vue";
@@ -126,6 +135,7 @@ const SelectNode = (node) => {
 
 const AddNode = (node) => {
   const key = CreateKey(node);
+
   node.children.push({
     key: key,
     data: {
@@ -177,5 +187,3 @@ const DisableAddButton = (node) => {
   else return false;
 };
 </script>
-
-<style scoped></style>
