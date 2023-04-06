@@ -47,14 +47,38 @@
       <PasswordComponent @change="InputPass"></PasswordComponent>
 
       <Divider></Divider>
+
+      <template v-if="role > 1">
+        <h5>Система</h5>
+        <div class="flex-form-column">
+          <MultiSelect placeholder="Область работ" v-model="state.areasId" :options="props.areas" optionLabel="name" optionValue="id" :filter="true"></MultiSelect>
+          <Dropdown placeholder="Роль" v-model="state.roleId" :options="props.roles" optionLabel="name" optionValue="id" :filter="true"></Dropdown>
+        </div>
+
+        <div class="flex-form">
+          <div class="field-checkbox">
+            <Checkbox v-model="state.isEmployee" inputId="emp1" name="emp" :binary="true" />
+            <label for="emp1">Является исполнителем</label>
+          </div>
+        </div>
+
+        <Divider></Divider>
+
+        <h5>Папки</h5>
+
+        <MultiSelect v-model="state.foldersId" :options="folders" optionLabel="name" optionValue="id" placeholder="Выберите папки" filter></MultiSelect>
+
+        <Divider></Divider>
+      </template>
     </template>
   </Form>
 </template>
 
 <script setup>
-import { ref, reactive } from "vue";
+import { ref, reactive, computed } from "vue";
 import { required, helpers } from "@vuelidate/validators";
 import { useVuelidate } from "@vuelidate/core";
+import { useStore } from "vuex";
 import Form from "./Form.vue";
 import PasswordComponent from "./Password/PasswordComponent.vue";
 
@@ -64,6 +88,9 @@ const redirect = { name: "userAll" };
 const regexPass = /^(((?=.*[a-z])(?=.*[A-Z]))|((?=.*[a-z])(?=.*[0-9]))|((?=.*[A-Z])(?=.*[0-9])))(?=.{6,})/;
 
 const rolePass = helpers.regex(regexPass);
+
+const store = useStore();
+const role = computed(() => store.getters.clientRole);
 
 const rules = {
   password: { required, rolePass },
